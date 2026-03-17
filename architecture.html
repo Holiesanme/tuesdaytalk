@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuesday Talk &mdash; Architecture</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Tuesday Talk</h1>
+    <p class="subtitle">Platform Architecture</p>
+  </header>
+
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="submit-talk.html">Submit a Talk</a>
+    <a href="speakers.html">Speakers</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+
+  <main>
+
+    <div class="card">
+      <h2>Tech Stack</h2>
+      <table class="arch-table">
+        <thead>
+          <tr><th>Concern</th><th>Solution</th><th>Rationale</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Frontend</td><td>Vanilla HTML5 + CSS3</td><td>Zero build tools, fast load, easy to maintain</td></tr>
+          <tr><td>Hosting</td><td>GitHub Pages</td><td>Free, auto-deploys from main branch</td></tr>
+          <tr><td>CI/CD</td><td>GitHub Actions (<code>.github/workflows/static.yml</code>)</td><td>Pushes to main trigger instant deploy</td></tr>
+          <tr><td>Email / Forms</td><td>Formspree</td><td>Handles form POST and email delivery without a backend</td></tr>
+          <tr><td>Client-side state</td><td>localStorage</td><td>Stores submissions and RSVPs in-browser for admin/analytics views</td></tr>
+          <tr><td>Fonts</td><td>Google Fonts (Inter)</td><td>Consistent typography across devices</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <h2>Information Architecture</h2>
+      <pre class="arch-diagram">
+index.html          ← Talk listing (upcoming + past)
+├── claude-talk.html     ← Talk detail + RSVP link
+├── speakers.html        ← Speaker profiles
+├── submit-talk.html     ← Speaker proposal form  (→ Formspree + localStorage)
+├── rsvp.html            ← Attendee RSVP form     (→ Formspree + localStorage)
+├── admin.html           ← Review proposals       (← localStorage['submissions'])
+├── attendance.html      ← Attendance analytics   (← localStorage['rsvps'])
+└── architecture.html   ← This page
+      </pre>
+    </div>
+
+    <div class="card">
+      <h2>Form Contracts (API Equivalent)</h2>
+
+      <h3 class="arch-section-title">Talk Submission &mdash; <code>submit-talk.html</code></h3>
+      <table class="arch-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>title</td><td>text</td><td>Yes</td><td>Talk title</td></tr>
+          <tr><td>abstract</td><td>textarea</td><td>Yes</td><td>Talk summary (max 500 chars)</td></tr>
+          <tr><td>speaker_name</td><td>text</td><td>Yes</td><td>Speaker full name</td></tr>
+          <tr><td>speaker_email</td><td>email</td><td>Yes</td><td>Speaker contact email</td></tr>
+          <tr><td>speaker_bio</td><td>textarea</td><td>No</td><td>Short speaker bio</td></tr>
+          <tr><td>preferred_date</td><td>date</td><td>No</td><td>Preferred Tuesday for the talk</td></tr>
+        </tbody>
+      </table>
+      <p>Destination: <code>POST https://formspree.io/f/YOUR_SUBMISSION_FORM_ID</code></p>
+      <p>localStorage key: <code>submissions</code> &mdash; array of objects with the fields above plus <code>status</code> (Pending / Approved / Rejected) and <code>submittedAt</code> timestamp.</p>
+
+      <h3 class="arch-section-title">RSVP &mdash; <code>rsvp.html</code></h3>
+      <table class="arch-table">
+        <thead><tr><th>Field</th><th>Type</th><th>Required</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>name</td><td>text</td><td>Yes</td><td>Attendee full name</td></tr>
+          <tr><td>email</td><td>email</td><td>Yes</td><td>Attendee email (receives confirmation)</td></tr>
+          <tr><td>talk</td><td>select</td><td>Yes</td><td>Which talk they are registering for</td></tr>
+        </tbody>
+      </table>
+      <p>Destination: <code>POST https://formspree.io/f/YOUR_RSVP_FORM_ID</code></p>
+      <p>localStorage key: <code>rsvps</code> &mdash; array of objects with the fields above plus <code>registeredAt</code> timestamp.</p>
+    </div>
+
+    <div class="card">
+      <h2>Deployment Pipeline</h2>
+      <pre class="arch-diagram">
+git push origin main
+  └─► GitHub Actions: .github/workflows/static.yml
+        └─► Deploy static files to GitHub Pages
+              └─► Live at tuesdaytalk.github.io
+      </pre>
+      <p>No build step. Files are served as-is. Average deploy time: ~30 seconds.</p>
+    </div>
+
+    <div class="back">
+      <a href="index.html">&larr; Back to Tuesday Talk</a>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; 2026 Tuesday Talk &mdash; tuesdaytalk.github.io
+  </footer>
+
+</body>
+</html>
