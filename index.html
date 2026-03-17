@@ -15,20 +15,91 @@
     <p>Ideas worth sharing, one Tuesday at a time.</p>
   </header>
 
+  <nav class="site-nav">
+    <a href="index.html" class="active">Home</a>
+    <a href="submit-talk.html">Submit a Talk</a>
+    <a href="speakers.html">Speakers</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+
   <main>
-    <div class="card">
-      <h2>Welcome</h2>
-      <p>
-        This is the home of Tuesday Talk — a space for conversations, reflections,
-        and ideas explored week by week.
-      </p>
-      <p>
-        Content is coming soon. Check back on a Tuesday!
-      </p>
-      <div class="cta">
-        <a href="claude-talk.html">Are you ready?</a>
+
+    <section>
+      <h2 class="section-title">Upcoming Talks</h2>
+
+      <div class="talk-card">
+        <div class="talk-date">
+          <span class="talk-day">25</span>
+          <span class="talk-month">Mar</span>
+        </div>
+        <div class="talk-body">
+          <div class="talk-status upcoming">Upcoming</div>
+          <h3 class="talk-title">Building Reliable AI Agents</h3>
+          <p class="talk-speaker">Ana Kovacs &mdash; Senior Engineer, Anthropic</p>
+          <p class="talk-abstract">A practical look at designing agentic systems that handle uncertainty gracefully — covering retries, fallbacks, tool selection, and evaluating agent quality in production.</p>
+          <div class="tag-row">
+            <span class="tag">ai-agents</span>
+            <span class="tag">reliability</span>
+            <span class="tag">production</span>
+          </div>
+          <div class="talk-actions">
+            <a href="rsvp.html?talk=building-reliable-ai-agents" class="btn-primary">RSVP</a>
+          </div>
+        </div>
       </div>
+
+      <div class="talk-card">
+        <div class="talk-date">
+          <span class="talk-day">01</span>
+          <span class="talk-month">Apr</span>
+        </div>
+        <div class="talk-body">
+          <div class="talk-status upcoming">Upcoming</div>
+          <h3 class="talk-title">TypeScript at Scale</h3>
+          <p class="talk-speaker">Daniel Wirth &mdash; Staff Engineer</p>
+          <p class="talk-abstract">How to keep TypeScript projects maintainable as they grow: module boundaries, branded types, incremental adoption strategies, and the tooling that makes it all worthwhile.</p>
+          <div class="tag-row">
+            <span class="tag">typescript</span>
+            <span class="tag">architecture</span>
+            <span class="tag">dx</span>
+          </div>
+          <div class="talk-actions">
+            <a href="rsvp.html?talk=typescript-at-scale" class="btn-primary">RSVP</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <h2 class="section-title">Past Talks</h2>
+
+      <div class="talk-card past">
+        <div class="talk-date">
+          <span class="talk-day">18</span>
+          <span class="talk-month">Mar</span>
+        </div>
+        <div class="talk-body">
+          <div class="talk-status past">Past</div>
+          <h3 class="talk-title">Claude Code &amp; the Model Context Protocol</h3>
+          <p class="talk-speaker">Kovacs Robert</p>
+          <p class="talk-abstract">A deep dive into Claude Code and MCP — how AI agents connect to tools, APIs, and data sources in a structured, secure way, and what that means for everyday development workflows.</p>
+          <div class="tag-row">
+            <span class="tag">claude-code</span>
+            <span class="tag">mcp</span>
+            <span class="tag">ai-tooling</span>
+            <span class="tag">anthropic</span>
+          </div>
+          <div class="talk-actions">
+            <a href="claude-talk.html" class="btn-secondary">View Details</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="cta">
+      <a href="submit-talk.html">Propose a Talk</a>
     </div>
+
   </main>
 
   <footer>
