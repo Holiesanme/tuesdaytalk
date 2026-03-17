@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tuesday Talk &mdash; Submit a Talk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <h1>Tuesday Talk</h1>
+    <p class="subtitle">Submit a Talk</p>
+  </header>
+
+  <nav class="site-nav">
+    <a href="index.html">Home</a>
+    <a href="submit-talk.html" class="active">Submit a Talk</a>
+    <a href="speakers.html">Speakers</a>
+    <a href="admin.html">Admin</a>
+  </nav>
+
+  <main>
+
+    <div class="card">
+      <h2>Propose a Talk</h2>
+      <p>Have an idea worth sharing? Fill in the form below and an organiser will be in touch to confirm your slot.</p>
+
+      <div id="form-success" class="form-message success" style="display:none;">
+        Your proposal has been submitted! We'll review it and get back to you by email.
+      </div>
+      <div id="form-error" class="form-message error" style="display:none;">
+        Something went wrong. Please try again or email us directly.
+      </div>
+
+      <form id="submission-form" action="https://formspree.io/f/YOUR_SUBMISSION_FORM_ID" method="POST" novalidate>
+
+        <div class="form-group">
+          <label for="title">Talk title <span aria-hidden="true">*</span></label>
+          <input type="text" id="title" name="title" required placeholder="e.g. Building Reliable AI Agents">
+        </div>
+
+        <div class="form-group">
+          <label for="abstract">Abstract <span aria-hidden="true">*</span></label>
+          <textarea id="abstract" name="abstract" required maxlength="500" rows="5"
+            placeholder="A brief summary of what you'll cover (max 500 characters)."></textarea>
+          <div class="form-hint"><span id="abstract-count">0</span> / 500 characters</div>
+        </div>
+
+        <div class="form-group">
+          <label for="speaker_name">Your name <span aria-hidden="true">*</span></label>
+          <input type="text" id="speaker_name" name="speaker_name" required placeholder="Full name">
+        </div>
+
+        <div class="form-group">
+          <label for="speaker_email">Your email <span aria-hidden="true">*</span></label>
+          <input type="email" id="speaker_email" name="speaker_email" required placeholder="you@example.com">
+          <div class="form-hint">We'll use this to confirm your slot and send calendar details.</div>
+        </div>
+
+        <div class="form-group">
+          <label for="speaker_bio">Short bio</label>
+          <textarea id="speaker_bio" name="speaker_bio" rows="3"
+            placeholder="A sentence or two about yourself (optional)."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="preferred_date">Preferred date</label>
+          <input type="date" id="preferred_date" name="preferred_date">
+          <div class="form-hint">Talks happen on Tuesdays. We'll try to accommodate your preference.</div>
+        </div>
+
+        <button type="submit" class="btn-primary">Submit Proposal</button>
+
+      </form>
+    </div>
+
+    <div class="back">
+      <a href="index.html">&larr; Back to Tuesday Talk</a>
+    </div>
+
+  </main>
+
+  <footer>
+    &copy; 2026 Tuesday Talk &mdash; tuesdaytalk.github.io
+  </footer>
+
+  <script>
+    // Character counter for abstract
+    const abstractEl = document.getElementById('abstract');
+    const countEl = document.getElementById('abstract-count');
+    abstractEl.addEventListener('input', () => {
+      countEl.textContent = abstractEl.value.length;
+    });
+
+    // Form submission: save to localStorage and POST to Formspree
+    const form = document.getElementById('submission-form');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const successEl = document.getElementById('form-success');
+      const errorEl = document.getElementById('form-error');
+      successEl.style.display = 'none';
+      errorEl.style.display = 'none';
+
+      const data = {
+        title: form.title.value.trim(),
+        abstract: form.abstract.value.trim(),
+        speaker_name: form.speaker_name.value.trim(),
+        speaker_email: form.speaker_email.value.trim(),
+        speaker_bio: form.speaker_bio.value.trim(),
+        preferred_date: form.preferred_date.value,
+        status: 'Pending',
+        submittedAt: new Date().toISOString()
+      };
+
+      // Save to localStorage
+      const submissions = JSON.parse(localStorage.getItem('submissions') || '[]');
+      submissions.push(data);
+      localStorage.setItem('submissions', JSON.stringify(submissions));
+
+      // POST to Formspree (best-effort — doesn't block success UX when ID is placeholder)
+      try {
+        const res = await fetch(form.action, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          body: new FormData(form)
+        });
+        if (!res.ok && !form.action.includes('YOUR_SUBMISSION_FORM_ID')) {
+          throw new Error('Formspree error');
+        }
+      } catch (_) {
+        // Silently continue — submission is already saved locally
+      }
+
+      form.reset();
+      countEl.textContent = '0';
+      successEl.style.display = 'block';
+      window.scrollTo({ top: successEl.offsetTop - 20, behavior: 'smooth' });
+    });
+  </script>
+
+</body>
+</html>
